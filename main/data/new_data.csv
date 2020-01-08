@@ -1,0 +1,101 @@
+Rank,Song,Artist,Album,Streams,Date,From
+1,"""Shape of You""",Ed Sheeran,Division,2357,2017,European
+2,"""One Dance""",Drake featuring Wizkid and Kyla,Views,1775,2016,American
+3,"""Rockstar""",Post Malone featuring 21 Savage,Beerbongs & Bentleys,1500,2017,American
+4,"""Closer""",The Chainsmokers featuring Halsey,Collage,1667,2016,American
+5,"""Thinking Out Loud""",Ed Sheeran,Multiply,1444,2014,European
+6,"""God's Plan""",Drake,Scorpion,1425,2018,American
+7,"""Havana""",Camila Cabello featuring Young Thug,Camila,1351,2017,American
+8,"""Love Yourself""",Justin Bieber,Purpose,1305,2015,American
+9,"""Despacito (Remix)""",Luis Fonsi and Daddy Yankee featuring Justin Bieber,Vida,1302,2017,European
+10,"""Lean On""",Major Lazer and DJ Snake featuring MØ,Peace Is the Mission,1297,2015,African/Carribean
+11,"""Perfect""",Ed Sheeran,Division,1285,2017,European
+12,"""Say You Won't Let Go""",James Arthur,Back from the Edge,1276,2016,European
+13,"""Photograph""",Ed Sheeran,Multiply,1260,2014,European
+14,"""New Rules""",Dua Lipa,Dua Lipa,1254,2017,European
+15,"""Starboy""",The Weeknd featuring Daft Punk,Starboy,1249,2016,American
+16,"""Sorry""",Justin Bieber,Purpose,1248,2015,American
+17,"""Don't Let Me Down""",The Chainsmokers featuring Daya,Collage,1236,2016,American
+18,"""Sunflower""",Post Malone and Swae Lee,Spider-Man: Into the Spider-Verse & Hollywood's Bleeding,1230,2018,American
+19,"""Believer""",Imagine Dragons,Evolve,1209,2017,American
+20,"""I Took a Pill in Ibiza (Seeb Remix)""",Mike Posner,"At Night, Alone",1200,2015,American
+21,"""Something Just Like This""",The Chainsmokers and Coldplay,Memories...Do Not Open,1191,2017,American
+22,"""Let Me Love You""",DJ Snake featuring Justin Bieber,Encore,1175,2016,African/Carribean
+23,"""Thunder""",Imagine Dragons,Evolve,1174,2017, American
+24,"""Humble""",Kendrick Lamar,Damn,1167,2017, American
+25,"""XO Tour Llif3""",Lil Uzi Vert,Luv Is Rage 2,1157,2017, American
+26,"""Sad!""",XXXTentacion,?,1146,2018, American
+27,"""Faded""",Alan Walker,Different World,1123,2015, European
+28,"""Stressed Out""",Twenty One Pilots,Blurryface,1120,2015,American
+29,"""Congratulations""",Post Malone featuring Quavo,Stoney,1104,2016, American
+30,"""Unforgettable""",French Montana featuring Swae Lee,Rules,1091,2017, American
+31,"""Cheap Thrills""",Sia,This Is Acting,1090,2016,Other
+32,"""Better Now""",Post Malone,Beerbongs & Bentleys,1087,2018,American
+33,"""All of Me""",John Legend,Love in the Future,1081,2013, American
+34,"""Treat You Better""",Shawn Mendes,Illuminate,1078,2016, American
+35,"""Uptown Funk""",Mark Ronson featuring Bruno Uptown Special,Take,1078,2014,American
+36,"""Take Me to Church""",Hozier,Hozier,1073,2013,European
+37,"""Cold Water""",Major Lazer featuring Justin Bieber and MØ,Single,1064,2016,African/Carribean
+38,"""Bohemian Rhapsody""",Queen,A Night at the Opera,1055,1975, European
+39,"""Despacito""",Luis Fonsi featuring Daddy Yankee,Vida,1054,2017, European
+40,"""What Do You Mean?""",Justin Bieber,Purpose,1051,2015, American
+41,"""Stay with Me""",Sam Smith,In the Lonely Hour,1049,2014, European
+42,"""Señorita""",Shawn Mendes and Camila Cabello,Shawn Mendes & Romance,1039,2019, American
+43,"""7 Years""",Lukas Graham,Lukas Graham,1036,2015, European
+44,"""Happier""",Marshmello featuring Bastille,Non-album single,1032,2018,American
+45,"""Let Her Go""",Passenger,All the Little Lights,1029,2012, European
+46,"""Stitches""",Shawn Mendes,Handwritten,1015,2015, American
+47,"""Can't Stop the Feeling!""",Justin Timberlake,Trolls: Original Motion Picture Soundtrack,1015,2016, American
+48,"""Bad Guy""",Billie Eilish,"When We All Fall Asleep, Where Do We Go?",1006,2019, American
+49,"""Cheerleader (Felix Jaehn Remix)""",Omi,Me 4 U,995,2014, African/Carribean
+50,"""That's What I Like""",Bruno Mars, 24K Magic,993,2016, American
+51,"""Too Good at Goodbyes""",Sam Smith,The Thrill of It All,984,2017, European
+52,"""Girls Like You""",Maroon 5 featuring Cardi B ,Red Pill Blues,980,2018, American
+53,"""Lucid Dreams""",Juice Wrld,Goodbye & Good Riddance,979,2018, American
+54,"""This Is What You Came For""",Calvin Harris featuring Rihanna,Non-album single,978,2016, American
+55,"""Jocelyn Flores""",XXXTentacion,17,974,2017, American
+56,"""Work from Home""",Fifth Harmony featuring Ty Dolla Sign,Jul-27,970,2016,American
+57,"""Hello""",Adele,25,970,2015, American
+58,"""Psycho""",Post Malone featuring Ty Dolla Sign,Beerbongs & Bentleys,966,2018, American
+59,"""Can't Feel My Face""",The Weeknd,Beauty Behind the Madness,966,2015, American
+60,"""Thank U, Next""",Ariana Grande,"Thank U, Next",966,2018, American
+61,"""I Like It""",Cardi B featuring Bad Bunny and J Balvin,Invasion of Privacy,962,2018, American
+62,"""Heathens""",Twenty One Pilots,Suicide Squad: The Album,960,2016, American
+63,"""7 Rings""",Ariana Grande,"Thank U, Next",959,2019, American
+64,"""Wake Me Up""",Avicii featuring Aloe Blacc,TRUE,956,2013, European
+65,"""Radioactive""",Imagine Dragons,Night Visions,954,2012, American
+66,"""See You Again""",Wiz Khalifa featuring Charlie Puth,Furious 7: Original Motion Picture Soundtrack,952,2015, American
+67,"""Shallow""",Lady Gaga and Bradley Cooper,A Star Is Born,950,2018, American
+68,"""Attention""",Charlie Puth,Voicenotes,949,2017,American
+69,"""In My Feelings""",Drake,Scorpion,938,2018, American
+70,"""Rockabye""",Clean Bandit featuring Sean Paul and Anne,What Is Love? & Speak Your Mind,937,2016, European
+71,"""Counting Stars""",OneRepublic,Native,935,2013, American
+72,"""I Don't Wanna Live Forever""",Zayn and Taylor Swift,Fifty Shades Darker: Original Motion Picture Soundtrack,932,2016, American
+73,"""I Fall Apart""",Post Malone,Stoney,928,2016, American
+74,"""I'm the One""","DJ Khaled featuring Justin Bieber, Quavo, Chance the Rapper and Lil Wayne",Grateful,927,2017, American
+75,"""Chandelier""",Sia,1000 Forms of Fear,925,2014,Other
+76,"""Can't Hold Us""",Macklemore & Ryan Lewis featuring Ray Dalton,The Heist,922,2011,American
+77,"""We Don't Talk Anymore""",Charlie Puth featuring Selena Gomez,Nine Track Mind,922,2016,American
+78,"""Work""",Rihanna featuring Drake,Anti,919,2016, American
+79,"""Mi Gente""",J Balvin and Willy William,Vibras,917,2017, American
+80,"""It Ain't Me""",Kygo and Selena Gomez,Stargazing,917,2017, American
+81,"""Sugar""",Maroon 5,V,912,2014, American
+82,"""One Kiss""",Calvin Harris and Dua Lipa,Dua Lipa,910,2018, American
+83,"""Ride""",Twenty One Pilots,Blurryface,901,2015, American
+84,"""The Hills""",The Weeknd,Beauty Behind The Madness,900,2015,American
+85,"""Demons""",Imagine Dragons,Night Visions,898,2012,American
+86,"""Taki Taki""","DJ Snake featuring Selena Gomez, Ozuna and Cardi B",Carte Blanche,895,2018, African/Carribean
+87,"""IDGAF""",Dua Lipa,Dua Lipa,893,2017,European
+88,"""Me Rehúso""",Danny Ocean,54+1,890,2016, American
+89,"""Side to Side""",Ariana Grande featuring Nicki Minaj,Dangerous Woman,885,2016, American
+90,"""Riptide""",Vance Joy,Dream Your Life Away,884,2013, Other
+91,"""There's Nothing Holdin' Me Back""",Shawn Mendes,Illuminate,884,2017, American
+92,"""In the Name of Love""",Martin Garrix and Bebe Rexha,Non-album single,883,2016, European
+93,"""Light It Up (Remix)""",Major Lazer featruing Nyla and Fuse ODG,Peace Is the Mission,882,2015,American
+94,"""Sicko Mode""",Travis Scott,Astroworld,880,2018, American
+95,"""I Hate U, I Love U""",Gnash featuring Olivia O'Brien,Us,877,2016, American
+96,"""Without Me""",Halsey,Manic,874,2018, American
+97,"""Cake by the Ocean""",DNCE,DNCE,873,2015, American
+98,"""Eastside""","Benny Blanco, Halsey and Khalid",Friends Keep Secrets,870,2018, American
+99,"""1-800-273-8255""",Logic featuring Alessia Cara and Khalid,Everybody,869,2017, American
+100,"""Love Me like You Do""",Ellie Goulding,Delirium,864,2015,European

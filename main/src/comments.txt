@@ -1,0 +1,253 @@
+//Modified code
+//Sub authour: Jeffrey Kola-Abodunde
+//Transferring original code into reusable compoenent
+
+/* bubbleChart creation function. Returns a function that will
+ * instantiate a new bubble chart given a DOM element to display
+ * it in and a dataset to visualize.
+ *
+ * Organization and style inspired by:
+ * https://bost.ocks.org/mike/chart/
+ *
+ */
+
+  Can use this to separate the years the songs were released
+   // Charge function that is called for each node.
+  // As part of the ManyBody force.
+  // This is what creates the repulsion between nodes.
+  //
+  // Charge is proportional to the diameter of the
+  // circle (which is stored in the radius attribute
+  // of the circle's associated data.
+  //
+  // This is done to allow for accurate collision
+  // detection with nodes of different sizes.
+  //
+  // Charge is negative because we want nodes to repel.
+  // @v4 Before the charge was a stand-alone attribute
+  //  of the force layout. Now we can use it as a separate force!
+
+
+  // Here we create a force layout and
+  // @v4 We create a force simulation now and
+  //  add forces to it.
+
+
+  // @v4 Force starts up automatically,
+  // //  which we don't want as there aren't any nodes yet.
+  // simulation.stop();
+
+    /*
+   * This data manipulation function takes the raw data from
+   * the CSV file and converts it into an array of node objects.
+   * Each node will store data and visualization values to visualize
+   * a bubble.
+   *
+   * rawData is expected to be an array of data objects, read in from
+   * one of d3's loading functions like d3.csv.
+   *
+   * This function returns the new node array, with a node in that
+   * array for each element in the rawData input. (KEY)
+
+
+
+    // Use the max Streams in the data as the max in the scale's domain
+    // note we have to ensure the Streams is a number.
+
+     // Use map() to convert raw data into node data.
+    // Checkout http://learnjsdata.com/ for more on
+    // working with data.
+    //jeff - can convert to arrow function
+    //creation of node objects
+
+    // Sizes bubbles based on area.
+    // @v4: new flattened scale names.
+
+
+     // Nice looking colors - no reason to buck the trend
+  // @v4 scales now have a flattened naming scheme
+
+
+  class Chart {
+    
+    constructor(opts) {
+        // load in arguments from config object
+        this.data = opts.data;
+        this.element = opts.element;
+        // create the chart
+        this.draw();
+    }
+    
+    draw() {
+        // define width, height and margin
+        this.width = this.element.offsetWidth;
+        this.height = this.width / 2;
+        this.margin = {
+            top: 20,
+            right: 75,
+            bottom: 45,
+            left: 50
+        };
+
+        // set up parent element and SVG
+        this.element.innerHTML = '';
+        const svg = d3.select(this.element).append('svg');
+        svg.attr('width',  this.width);
+        svg.attr('height', this.height);
+
+        // we'll actually be appending to a <g> element
+        this.plot = svg.append('g')
+            .attr('transform',`translate(${this.margin.left},${this.margin.top})`);
+
+        // create the other stuff
+        this.createScales();
+        this.addAxes();
+        this.addLine();
+    }
+    
+    createScales() {
+        // shorthand to save typing later
+        const m = this.margin;
+        
+        // calculate max and min for data
+        const xExtent = d3.extent(this.data, d => d[0]);
+        const yExtent = d3.extent(this.data, d => d[1]);
+
+        // force zero baseline if all data points are positive
+        if (yExtent[0] > 0) { yExtent[0] = 0; };
+
+        this.xScale = d3.scaleTime()
+            .range([0, this.width-m.right])
+            .domain(xExtent);
+
+        this.yScale = d3.scaleLinear()
+            .range([this.height-(m.top+m.bottom), 0])
+            .domain(yExtent);
+    }
+
+    addAxes() {
+        const m = this.margin;
+
+        // create and append axis elements
+        // this is all pretty straightforward D3 stuff
+        const xAxis = d3.axisBottom()
+            .scale(this.xScale)
+            .ticks(d3.timeMonth);
+
+        const yAxis = d3.axisLeft()
+            .scale(this.yScale)
+            .tickFormat(d3.format("d"));
+
+        this.plot.append("g")
+            .attr("class", "x axis")
+            .attr("transform", `translate(0, ${this.height-(m.top+m.bottom)})`)
+            .call(xAxis);
+
+        this.plot.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
+    }
+    
+    addLine() {
+        const line = d3.line()
+            .x(d => this.xScale(d[0]))
+            .y(d => this.yScale(d[1]));
+
+        this.plot.append('path')
+            // use data stored in `this`
+            .datum(this.data)
+            .classed('line',true)
+            .attr('d',line)
+            // set stroke to specified color, or default to red
+            .style('stroke', this.lineColor || 'red');
+    }
+    
+    // the following are "public methods"
+    // which can be used by code outside of this file
+
+    setColor(newColor) {
+        this.plot.select('.line')
+            .style('stroke', newColor);
+        
+        // store for use when redrawing
+        this.lineColor = newColor;
+    }
+
+    setData(newData) {
+        this.data = newData;
+
+        // full redraw needed
+        this.draw();
+    }
+}
+
+
+
+  // /*
+  //  * Main entry point to the bubble chart. This function is returned
+  //  * by the parent closure. It prepares the rawData for visualization
+  //  * and adds an svg element to the provided selector and starts the
+  //  * visualization creation process.
+  //  *
+  //  * jeff : DESRIPTION OF
+  //  * selector is expected to be a DOM element or CSS selector that
+  //  * points to the parent element of the bubble chart. Inside this
+  //  * element, the code will add the SVG continer for the visualization.
+  //  *
+  //  * rawData is expected to be an array of data objects as provided by
+  //  * a d3 loading function like d3.csv.
+  //  */
+  // var chart = function chart(selector, rawData) {
+  //   // convert raw data into nodes data
+  //   nodes = createNodes(rawData);
+
+    // Create a SVG element inside the provided selector
+    // with desired size.
+
+
+
+
+  //   // Create new circle elements each with class `bubble`.
+
+      
+      
+      
+      
+
+  //   // There will be one circle.bubble for each object in the nodes array.
+  //   // Initially, their radius (r attribute) will be 0.
+  //   // @v4 Selections are immutable, so lets capture the
+  //   //  enter selection to apply our transtition to below.
+  //   var bubblesE = bubbles.enter().append('circle')
+  //     .classed('bubble', true)
+  //     .attr('r', 0)
+  //     .attr('fill', function (d) { return fillColor(d.group); })
+  //     .attr('stroke', function (d) { return d3.rgb(fillColor(d.group)).darker(); })
+  //     .attr('stroke-width', 2)
+  //     .on('mouseover', showDetail)
+  //     .on('mouseout', hideDetail);
+
+  //   // @v4 Merge the original empty selection and the enter selection
+  //   bubbles = bubbles.merge(bubblesE);
+
+  //   // Fancy transition to make bubbles appear, ending with the
+  //   // correct radius
+  //   bubbles.transition()
+  //     .duration(2000)
+  //     .attr('r', function (d) { return d.radius; });
+
+  //   // Set the simulation's nodes to our newly created nodes array.
+  //   // @v4 Once we set the nodes, the simulation will start running automatically!
+  //   simulation.nodes(nodes);
+
+  //   // Set initial layout to single group.
+  //   groupBubbles();
+  // };
+
+  // /*
+  //  * Callback function that is called after every tick of the
+  //  * force simulation.
+  //  * Here we do the acutal repositioning of the SVG circles
+  //  * based on the current x and y values of their bound node data.
+  //  * These x and y values are modified by the force simulation.
+

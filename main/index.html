@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Bubble Chart v4</title>
+  <meta name="description" content="Using D3v4 to create a Bubble chart. Based on NYT visualization">
+  <meta name="author" content="Jim Vallandingham">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/bubble_chart.css">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css">
+
+      <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+
+  <script
+  src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+  integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+  crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.15.0/d3.js" charset="utf-8"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Most Streamed Tracks on Spotify</h1>
+    <div id="toolbar">
+      <a href="#" id="all" class="button active">All Songs</a>
+      <a href="#" id="year" class="button">Songs By Continent of Origin</a>
+    </div>
+    <div id="vis">
+      
+    </div>
+  <div class="footer">
+        <div id="simple_slider"></div>
+        <button id="change_color"> Change colours</button>
+        <button id="r_scale">Change radial scales</button>
+    </div>
+  </div>
+
+
+  <script type="module" src="src/index.js"></script>
+  <script src="src/tooltip.js"></script>
+
+  <!--<script src="src/bubble_chart.js"></script>-->
+
+
+</body>
+</html>
