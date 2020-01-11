@@ -9,10 +9,12 @@ import * as d3 from "https://unpkg.com/d3@5.15.0/index.js?module";
 
 class BubbleChart{
 
-  constructor(){
+  constructor(data){
+      this.data = data;
       this.svg = null;
       this.width = 940;
       this.height = 600;
+      this.tooltip = floatingTooltip('gates_tooltip', 240);
 
 
       this.center = {
@@ -21,6 +23,7 @@ class BubbleChart{
       }
 
       this.setBubbleColors = Array("red", '#ffa500', '#ffcd00','#87c735','#3e49bb','#682cbf','#7f4fc9','pink','brown');
+      this.draw("#vis");
 
   }
 
@@ -85,6 +88,15 @@ class BubbleChart{
   }
 
 
+  get getData(){
+    return this.data;
+  }
+
+  set setData(_data){
+    this.data = _data;
+    this.draw("#vis");
+  }
+
 
 
     
@@ -97,7 +109,8 @@ class BubbleChart{
     .attr('height', this.height);
     
     this.setForceStrength = 0.2;
-    this.createChart("#vis",this.nodeGetter);
+    this.setUpChartNodes(this.getData);
+    this.populateChart("#vis",this.nodeGetter);
 
   }
 
@@ -128,9 +141,9 @@ class BubbleChart{
    }
 
 
-createNodes(rawData){
-
-    const maxAmount = d3.max(rawData, function (d) { return +d.Streams * Math.pow(10,6); });
+setUpChartNodes(){
+    console.log(this.getData);
+    const maxAmount = d3.max(this.getData, function (d) { return +d.Streams * Math.pow(10,6); });
 
     const radiusScale = d3.scalePow()
       .exponent(2)
@@ -138,12 +151,13 @@ createNodes(rawData){
       .domain([0, maxAmount]);
 
 
-     const myNodes = rawData.map(function (d) {
+     const myNodes = this.getData.map(function (d) {
       return {
-        id: d.id,
+        rank: d.Rank,
         radius: radiusScale(+d.Streams * Math.pow(10,6)),
         value: +d.Streams * Math.pow(10,6),
-        name: d.Artist,
+        name: d.Song,
+        artist: d.Artist,
         from: String(d.From).trim(),
         group: +d.Date,
         year: d.Date,
@@ -156,7 +170,6 @@ createNodes(rawData){
     // sort them to prevent occlusion of smaller nodes.
     myNodes.sort(function (a, b) { return b.value - a.value; });
     this.nodeSetter = myNodes;
-    //this.createChart("#vis",this.nodeGetter);
 
 }
 
@@ -175,21 +188,17 @@ createNodes(rawData){
 
 
 
-  createChart(selector, rawData){
+  populateChart(selector){
 
   var set = new Set();
   function getYearsCol(data){
     for (var i = data.length - 1; i >= 0; i--) {
-      set.add(data[i].year.toString());
+      set.add(data[i].Date.toString());
     }
   }
   this.domainSetter = set;
-
-
-
-
-
-  getYearsCol(rawData);
+  console.log(this.getData);
+  getYearsCol(this.getData);
 
    const fillColor = d3.scaleOrdinal()
   .domain(this.domainGetter)
@@ -215,9 +224,11 @@ createNodes(rawData){
       .attr('r', 0)
       .attr('fill', function (d) { return d3.rgb(fillColor(d.group)); })
       .attr('stroke', function (d) { return d3.rgb(fillColor(d.group)).darker(); })
-      .attr('stroke-width', 2);
-      //.on('mouseover', this.showDetail)
-      //.on('mouseout', this.hideDetail);
+      .attr('stroke-width', 2)
+      .on('mouseover', this.showDetail)
+      .on('mouseout', function(){
+        $('.tooltip').hide();
+      });
 
     // @v4 Merge the original empty selection and the enter selection
     this.bubbleSetter = this.bubbleGetter.merge(this.bubblesE);
@@ -250,24 +261,21 @@ createNodes(rawData){
     let tooltip = floatingTooltip('gates_tooltip', 240);
 
     let content = '<span class="name">Title: </span><span class="value">' +
-                  d.Artist +
+                  d.name +
                   '</span><br/>' +
-                  '<span class="name">Amount: </span><span class="value">$' +
-                  d.value +
+                  '<span class="name">Artist: </span><span class="value">' +
+                  d.artist +
                   '</span><br/>' +
-                  '<span class="name">Year: </span><span class="value">' +
+                  '<span class="name">Date Published </span><span class="value">' +
                   d.year +
+                  '</span> <br/>' +
+                  '<span class="name">Rank: </span><span class="value">' +
+                  d.rank +
                   '</span>';
     tooltip.showTooltip(content, d3.event);
   }
 
-  hideDetail(d) {
-    // reset outline
-    d3.select(this)
-      .attr('stroke', d3.rgb(fillColor(d.group)).darker());
 
-      tooltip.hideTooltip();
-  }
 
 
    randomColor(){
@@ -277,28 +285,60 @@ createNodes(rawData){
 
   generateRandomColorArray(){
       const randomColors = [];
-      for (let i =0; i <= this.domainGetter.size; i++) {
+      while (randomColors.length <= 7) {
+        if (!randomColors.includes(this.randomColor())){ 
         randomColors.push(this.randomColor());
+      }
       }
       return randomColors;
     }
 
+
+
 }
 
 
-const chart = new BubbleChart();
 
-function display(data){
-  chart.createNodes(data);
-  chart.draw("#vis");
-};
+var currentSSelectedYear = "2019";
 
-let currentSSelectedYear = "2019";
-d3.csv("./data/new_data.csv").then(function(data){display(data); });
+d3.csv("./data/"+currentSSelectedYear+".csv").then(function(data){
+
+  let chart = new BubbleChart(data);
 
 
+    $(document).ready(function(){
 
-  var toggleDisplay = function (displayName) {
+    $("#change_color").click(function(){
+        var bubbleColors = chart.generateRandomColorArray();
+        chart.setBubbleColors = bubbleColors;
+        chart.draw("#vis");
+      });
+
+  });
+
+    const yearData = ["2019","2018","2017"];
+
+     $("#simple_slider").slider({
+      range: false,
+      min: 0,
+      max: yearData.length -1,
+      value: 0,
+      change : function(event,ui){
+        currentSSelectedYear = yearData[ui.value];
+        $("#year_update").text(currentSSelectedYear);
+        d3.csv("./data/"+currentSSelectedYear+".csv").then(function(newData){
+            chart.setData = newData;
+            console.log(chart.getData);
+        });
+    }
+
+
+
+
+});
+
+
+var toggleDisplay = function (displayName) {
     if (displayName === 'year') {
       splitBubbles();
     } else {
@@ -330,18 +370,19 @@ function setupButtons() {
 
 
  function nodeYearPos(d){ 
+
     const yearCenters = {
     "European": { x: chart.width / 3, y: chart.height / 2 },
-    "American": { x: chart.width / 2, y: chart.height / 2 },
+    "American": { x: chart.width /2 , y: chart.height / 2 },
     "African/Carribean": { x: 2 * chart.width / 3, y: chart.height / 2 },
-    "Other" : {x :0 , y: 0}
+    "Other" : {x :chart.width * 0.8 , y: chart.height/2}
   }
-    
+    console.log(d.from);
     return yearCenters[d.from].x;
   }
 
 
-    //  */
+    //  add to class
   function splitBubbles() {
     showYearTitles();
 
@@ -367,10 +408,10 @@ function setupButtons() {
     // the year texts once and then just hide them.
 
   const decadeTitle = {
-    "European": 160,
+    "European": chart.width /4,
     "American": chart.width / 2,
-    "African/Carribean": chart.width - 160,
-    "Other" : 0
+    "African/Carribean": chart.width * 0.75,
+    "Other" : chart.width * 0.95
   };
 
     const yearsData = d3.keys(decadeTitle);
@@ -383,31 +424,29 @@ function setupButtons() {
       .attr('y', 40)
       .attr('text-anchor', 'middle')
       .text(function (d) { return d; });
+
+
+
   }
 
 
-
-  $(document).ready(function(){
-
-  $("#change_color").click(function(){
-      var bubbleColors = chart.generateRandomColorArray();
-      chart.setBubbleColors = bubbleColors;
-      chart.draw("#vis");
-    });
-
-  var data = ["2019","2018","2017","2016","2015","2014","2013","2012","2011","2010"];
-   $("#simple_slider").slider({
-    range: false,
-    min: 0,
-    max: data.length -1,
-    values : data,
-    change : function(event, ui){
-      currentSSelectedYear = data[ui.value];
-    }
-
+  $(".bubble").tooltip(function(){
+    this
   });
 
-  });
+
+  setupButtons();
+
+
+
+
+});
+
+
+
+
+
+
 
   
   
@@ -432,8 +471,6 @@ function setupButtons() {
   
   
 
-
-setupButtons();
 
 // /*
 //  * Helper function to convert a number into a string
