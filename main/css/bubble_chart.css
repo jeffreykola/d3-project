@@ -67,3 +67,7 @@ a, a:visited, a:active {
 .footer {
   text-align: center;
 }
+
+#year_update{
+  font-size: 20px;
+}

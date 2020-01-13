@@ -26,7 +26,8 @@
   },
   "scripts": {
     "build": "babel src -d lib",
-    "start": "webpack-dev-server"
+    "start": "webpack-dev-server",
+    "doc" : "jsdoc -c jsdoc.json"
   },
   "author": "Jeffrey Kola",
   "license": "ISC"
