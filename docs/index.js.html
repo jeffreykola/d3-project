@@ -26,199 +26,200 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>
-import * as d3 from "https://unpkg.com/d3@5.15.0/index.js?module";
-
-
+            <pre class="prettyprint source linenums"><code>import * as d3 from 'https://unpkg.com/d3@5.15.0/index.js?module';
 /**
 * Represents a bubble chart
 * @constructor
 * @param {Array} data - Data passed from d3.csv promise
 */
-class BubbleChart{
+class BubbleChart {
+  constructor (data) {
+    this.data = data;
+    this.svg = null;
+    this.width = 940;
+    this.height = 600;
+    this.tooltip = floatingTooltip('gates_tooltip', 240);
+    this.center = {
+      x: this.width / 2,
+      y: this.height / 2
+    };
 
-  constructor(data){
-
-      this.data = data;
-      this.svg = null;
-      this.width = 940;
-      this.height = 600;
-      this.tooltip = floatingTooltip('gates_tooltip', 240);
-      this.center = {
-        x : this.width/2,
-        y: this.height/2
-      }
-
-      this.setBubbleColors = Array("red", '#ffa500', '#ffcd00','#87c735','#3e49bb','#682cbf','#7f4fc9','pink','brown');
-      this.setRadialScale =2;
-      this.draw("#vis");
-
+    this.setBubbleColors = ['red', '#ffa500', '#ffcd00', '#87c735', '#3e49bb', '#682cbf', '#7f4fc9', 'pink', 'brown'];
+    this.setRadialScale = 2;
+    this.draw('#vis');
   }
 
-
-  set setForceStrength(fs = 0.03){
+  /**
+   * Force strength used in force layout
+   * Determines the stength of the force used to push the bubbles towards the center
+   * @type {number}
+  */
+  set setForceStrength (fs = 0.03) {
     this.forceStrength = fs;
   }
 
-  set setBubbleColors(bcs){
-   this.bubbleColors = bcs;
+  /**
+   * Bubble colors
+   * Array of k hex codes (String) for each distinct year in the dataset.
+   * @type {Array}
+  */
+  set setBubbleColors (bcs) {
+    this.bubbleColors = bcs;
   }
 
-  set dataSetter(randData){
-    this.data = randData;
-  }
-
-  get dataGetter(){
+  get dataGetter () {
     return this.data;
   }
 
-  get getBubbleColors(){
+  get getBubbleColors () {
     return this.bubbleColors;
   }
 
-
-  get getForceStrength(){
+  get getForceStrength () {
     return this.forceStrength;
   }
 
-
-  set bubbleSetter(bub=null){
+  /**
+   * Bubbles corresponding to the circle svg elements
+   * Array containing the circle svg elements
+   * @type {Array}
+  */
+  set bubbleSetter (bub = null) {
     this.bubbles = bub;
-
   }
 
-  get bubbleGetter(){
+  get bubbleGetter () {
     return this.bubbles;
   }
 
-  set nodeSetter(n = []){
+  /**
+   *  Set to null by default
+   * These nodes are custom data objects which are based on certain fields in the parsed data
+   * @type {Array}
+  */
+  set nodeSetter (n = []) {
     this.nodes = n;
   }
 
-  get nodeGetter(){
+  get nodeGetter () {
     return this.nodes;
   }
 
-
-  get centerGetter(){
+  get centerGetter () {
     return this.center;
   }
 
-  get simulationGetter(){
+  get simulationGetter () {
     return this.simulation;
   }
 
-  set domainSetter(domain){
+  /**
+   * The domain of the used in the ordinal scale
+   * Contains unique years of the publishing dates of the tracks in the specific data set
+   * @type {Array}
+  */
+  set domainSetter (domain) {
     this.domain = domain;
   }
 
-  get domainGetter(){
+  get domainGetter () {
     return this.domain;
   }
 
-
-  get getData(){
+  get getData () {
     return this.data;
   }
 
-  set setData(_data){
-    this.data = _data;
-    this.draw("#vis");
-  }
-
-  get getRadialScale(){
-    return this.radialScale;
-  }
-
-  set setRadialScale(scale=2){
-      this.radialScale = scale;
-  }
-
-
-
-    
   /**
-  Draws svg canvas into a div and inserts bubbles
+  * When the data is passed into the constructor the facilitates the accessing of the data to different functions. &lt;br>
+  * Array containing objects which describe a certain track based on the information of interest which includes Streams,Publishing Date etc
+  * @type {Array}
+  */
+  set setData (_data) {
+    this.data = _data;
+    this.draw('#vis');
+  }
+
+  /**
+  * @see {@link setUpChartNodes,populateChart}
+  * @description Draws svg canvas into a div and inserts bubbles
   * @param {string} selector - String referencing the css selector of where the visualisation is to be drawn
   */
-  draw(selector){
-  $(selector).html('');
-  this.svg = d3.select(selector)
-    .append('svg')
-    .attr('width', this.width)
-    .attr('height', this.height);
-    
+  draw (selector) {
+    // Clears the visualisation before redrawing
+    $(selector).html('');
+    this.svg = d3.select(selector)
+      .append('svg')
+      .attr('width', this.width)
+      .attr('height', this.height);
     this.setForceStrength = 0.2;
     this.setUpChartNodes(this.getData);
-    this.populateChart("#vis",this.nodeGetter);
-   
-
+    this.populateChart('#vis', this.nodeGetter);
   }
 
+  /**
+  @see {@link getForceStrength,centerGetter}
+  @description Moves all bubbles from default position to the centre of the sceen by applying a force
+  Another force applied on the bubbles is called 'charge' which prevents the bubbles from colliding
+  */
+  createForceLayout () {
+    const charge = (d) => -Math.pow(d.radius, 2.0) * this.getForceStrength;
 
-  createForceLayout(){
-
-    const charge = (d) =>
-        -Math.pow(d.radius, 2.0) * this.getForceStrength;
-
-
-    //console.log(this.bubbleGetter);
-    
-    const ticked = () =>{ 
+    const ticked = () => {
       this.bubbleGetter
-      .attr('cx', function (d) { return +d.x; })
-      .attr('cy', function (d) { return +d.y; });
-    }
+        .attr('cx', (d) => +d.x)
+        .attr('cy', (d) => +d.y);
+    };
 
     const simulation = d3.forceSimulation()
-    .velocityDecay(0.2)
-    .force('x', d3.forceX().strength(0.03).x(500))
-    .force('y', d3.forceY().strength(this.getForceStrength).y(this.centerGetter.y))
-    .force('charge', d3.forceManyBody().strength(function(d) { return charge(d); }))
-    .on("tick", ticked);
-    //this.simulation.force(d3.forceCenter(this.centerGetter.z, this.centerGetter.y));
+      .velocityDecay(0.2)
+      .force('x', d3.forceX().strength(0.03).x(500))
+      .force('y', d3.forceY().strength(this.getForceStrength).y(this.centerGetter.y))
+      .force('charge', d3.forceManyBody().strength((d) => charge(d)))
+      .on('tick', ticked);
 
     return simulation;
-   }
+  }
 
-
-setUpChartNodes(){
-    console.log(this.getRadialScale);
-    const maxAmount = d3.max(this.getData, function (d) { return +d.Streams * Math.pow(10,6); });
+  /**
+   * @see {@link nodeSetter,getData} &lt;br>
+   * See {@link showDetail} for description of the node object created in this method &lt;br>
+   * This creates the radius scale by calculating the range. &lt;br>
+   * This also creates the node objects by mapping proprerties of the Objects returned by the raw data
+   * Creates node object which is explained at the documentation of {@link showDetail}
+  */
+  setUpChartNodes () {
+    const maxAmount = d3.max(this.getData, (d) => +d.Streams * Math.pow(10, 6));
 
     const radiusScale = d3.scalePow()
-      .exponent(this.getRadialScale)
+      .exponent(2)
       .range([2, 85])
       .domain([0, maxAmount]);
 
+    const myNodes = this.getData.map((d) => ({
+      rank: +d.Rank,
+      radius: radiusScale(+d.Streams * Math.pow(10, 6)),
+      value: +d.Streams * Math.pow(10, 6),
+      name: d.Song,
+      artist: d.Artist,
+      from: String(d.From).trim(),
+      group: +d.Date,
+      year: d.Date,
+      x: Math.random() * 900,
+      y: Math.random() * 800
+    }));
 
-     const myNodes = this.getData.map(function (d) {
-      return {
-        rank: d.Rank,
-        radius: radiusScale(+d.Streams * Math.pow(10,6)),
-        value: +d.Streams * Math.pow(10,6),
-        name: d.Song,
-        artist: d.Artist,
-        from: String(d.From).trim(),
-        group: +d.Date,
-        year: d.Date,
-        x: Math.random() * 900,
-        y: Math.random() * 800
-      };
-      
-    });
-
-    // sort them to prevent occlusion of smaller nodes.
-    myNodes.sort(function (a, b) { return b.value - a.value; });
+    myNodes.sort((a, b) => b.value - a.value);
     this.nodeSetter = myNodes;
+  }
 
-}
-
-
-
-  groupBubbles() {
+  /**
+  *@see {@link splitBubbles}
+  * @Description This groups the bubbles, should they be split up simply by dragging the bubbles to the center of the visualisation &lt;br>
+  * The forceLayout simulation created in {@link createForceLayout} also restarts
+  */
+  groupBubbles () {
     this.svg.selectAll('.year').remove();
-
     // @v4 Reset the 'x' force to draw the bubbles to the center.
     this.simulation.force('x', d3.forceX().strength(this.getForceStrength).x(this.centerGetter.x));
 
@@ -226,192 +227,194 @@ setUpChartNodes(){
     this.simulation.alpha(1).restart();
   }
 
-
-
-
-  populateChart(selector){
-
-  var set = new Set();
-  function getYearsCol(data){
-    for (var i = data.length - 1; i >= 0; i--) {
-      set.add(data[i].Date.toString());
+/**
+  * This method is responsible for converting the custom node objects into svg circle elements
+  * A specific node object is related to bubble based on it's properties such as Streams and Artist Nationality
+*/
+  populateChart () {
+    const set = new Set();
+    function getYearsCol (data) {
+      for (let i = data.length - 1; i >= 0; i--) {
+        set.add(data[i].Date.toString());
+      }
     }
-  }
-  this.domainSetter = set;
-  console.log(this.getData);
-  getYearsCol(this.getData);
+    this.domainSetter = set;
+    getYearsCol(this.getData);
 
-   const fillColor = d3.scaleOrdinal()
-  .domain(this.domainGetter)
-  .range(this.getBubbleColors);
-
+    /// Fill color based on Date Published
+    const fillColor = d3.scaleOrdinal()
+      .domain(this.domainGetter)
+      .range(this.getBubbleColors);
 
     this.bubbleSetter = this.svg.selectAll('.bubble')
-      .data(this.nodeGetter, function (d) { return d.Song; });
-
-
+      .data(this.nodeGetter, (d) => d.Streams);
 
     this.bubblesE = this.bubbleGetter.enter().append('circle')
       .classed('bubble', true)
+      // node starts off with radius of zero
       .attr('r', 0)
-      .attr('fill', function (d) { return d3.rgb(fillColor(d.group)); })
-      .attr('stroke', function (d) { return d3.rgb(fillColor(d.group)).darker(); })
+      .attr('fill', (d) => d3.rgb(fillColor(d.group)))
+      .attr('stroke', (d) => d3.rgb(fillColor(d.group)).darker())
       .attr('stroke-width', 2)
       .on('mouseover', this.showDetail)
-      .on('mouseout', function(){
+      .on('mouseout', () => {
         $('.tooltip').hide();
+        $('.bubble').css({ opacity: 1 });
       });
 
-  
     this.bubbleSetter = this.bubbleGetter.merge(this.bubblesE);
 
-
+    // Usinf a transistion the bubble reaches the full size
     this.bubbleGetter.transition()
       .duration(2000)
-      .attr('r', function (d) { return d.radius; });
+      .attr('r', (d) => d.radius);
 
-     
-     this.simulation = this.createForceLayout();
-     this.simulation.stop();
-     this.simulation.nodes(this.nodeGetter);
-
-
+    // Force layout creation
+    this.simulation = this.createForceLayout();
+    // Stop simulation as the nodes have not been added yet
+    this.simulation.stop();
+    // This automactically restarts the simulation with the nodes inserted
+    this.simulation.nodes(this.nodeGetter);
+    // Regrouping bubbles
     this.groupBubbles();
-}
+  }
 
-
-   showDetail(d) {
+  /**
+  * This method utilises the node object which is defined {@link setUpChartNodes}
+  * This method is called when you hover over a circle object, when hovering over a bubble this method is responsible for reducing the opacity of the bubble.
+  * @param d - Node object containing parsed data which describes a Song
+  * @param d.artist {string} - Artist name
+  * @param d.year {string} - Date published
+  * @param d.rank {number} - Ranking within the top 100 tracks in spotify for this specific year
+  * @param d.from {number} - Location where the main artist was born
+  * @param d.value {number} - Number of streams
+  * @param d.group {number} - Date published (used for the ordinal scale, to color the objects based on their publishing date)
+  */
+  showDetail (d) {
     // change outline to indicate hover state.
-    let tooltip = floatingTooltip('gates_tooltip', 240);
+    const tooltip = floatingTooltip('gates_tooltip', 240);
+    $(this).css({ opacity: 0.8 });
+    const content = `&lt;span class="name">Title: &lt;/span>&lt;span class="value">${
+      d.name
+    }&lt;/span>&lt;br/>` +
+                  `&lt;span class="name">Artist: &lt;/span>&lt;span class="value">${
+                    d.artist
+                  }&lt;/span>&lt;br/>` +
+                  `&lt;span class="name">Date Published &lt;/span>&lt;span class="value">${
+                    d.year
+                  }&lt;/span> &lt;br/>` +
 
-    let content = '&lt;span class="name">Title: &lt;/span>&lt;span class="value">' +
-                  d.name +
-                  '&lt;/span>&lt;br/>' +
-                  '&lt;span class="name">Artist: &lt;/span>&lt;span class="value">' +
-                  d.artist +
-                  '&lt;/span>&lt;br/>' +
-                  '&lt;span class="name">Date Published &lt;/span>&lt;span class="value">' +
-                  d.year +
-                  '&lt;/span> &lt;br/>' +
-                  '&lt;span class="name">Rank: &lt;/span>&lt;span class="value">' +
-                  d.rank +
-                  '&lt;/span>';
+                  `&lt;span class="name">Rank: &lt;/span>&lt;span class="value">${
+                    d.rank
+                  }&lt;/span>`;
     tooltip.showTooltip(content, d3.event);
   }
 
+  /**
+  * Used to generate a single random color
+  * @returns {string} - randomly generated hex code
+  */
+  randomColor () {
+    // Reference this code
+    return `#${(`000000${Math.random().toString(16).slice(2, 8).toUpperCase()}`).slice(-6)}`;
+  }
 
-
-
-   randomColor(){
-    //Reference this code
-      return '#' + ("000000" + Math.random().toString(16).slice(2, 8).toUpperCase()).slice(-6);
-    }
-
-  generateRandomColorArray(){
-      const randomColors = [];
-      while (randomColors.length &lt;= 7) {
-        if (!randomColors.includes(this.randomColor())){ 
+  /**
+  * Used randomColor method to generate an array of colors which is the same size as the domain; so that each unique year will be assigned a color
+  * @see {@link randomColor}
+  * @returns {Array}
+  */
+  generateRandomColorArray () {
+    const randomColors = [];
+    while (randomColors.length &lt;= this.domainGetter.size) {
+      if (!randomColors.includes(this.randomColor())) {
         randomColors.push(this.randomColor());
       }
-      }
-      return randomColors;
     }
-
-
-
+    return randomColors;
+  }
 }
 
+//Graph initialisation
+d3.csv('./data/2019.csv').then((data) => {
+  const chart = new BubbleChart(data);
+// -----------------------------------------------------
+// -Everyting under here is not necessarlity required for the visulaisation to be created
+// -Extra added functionality such as the changing of colors, data and the splitting of the data based on the content
+  $(document).ready(() => {
+    $('#change_color').click(() => {
+      // Once the change color button is pressed
+      // Generate a new array of random colors
+      // Set this as the bubble colors
+      // Readraw the visualisation
+      const bubbleColors = chart.generateRandomColorArray();
+      chart.setBubbleColors = bubbleColors;
+      chart.draw('#vis');
+    });
+  });
 
-var currentSSelectedYear = "2019";
+  let currentSSelectedYear = '2019';
+  const yearData = ['2019', '2018', '2017'];
 
-d3.csv("./data/"+currentSSelectedYear+".csv").then(function(data){
-
-  let chart = new BubbleChart(data);
-
-
-    $(document).ready(function(){
-
-    $("#change_color").click(function(){
-        var bubbleColors = chart.generateRandomColorArray();
-        chart.setBubbleColors = bubbleColors;
-        chart.draw("#vis");
+  // Crreates the slider to change the year
+  $('#simple_slider').slider({
+    range: 'min',
+    min: 0,
+    max: yearData.length - 1,
+    value: 0,
+    change (event, ui) {
+      currentSSelectedYear = yearData[ui.value];
+      $('#year_update').text(currentSSelectedYear);
+      d3.csv(`./data/${currentSSelectedYear}.csv`).then((newData) => {
+        chart.setData = newData;
+        console.log(chart.getData);
       });
+    }
 
   });
 
-    const yearData = ["2019","2018","2017"];
-
-     $("#simple_slider").slider({
-      range: false,
-      min: 0,
-      max: yearData.length -1,
-      value: 0,
-      change : function(event,ui){
-        currentSSelectedYear = yearData[ui.value];
-        $("#year_update").text(currentSSelectedYear);
-        d3.csv("./data/"+currentSSelectedYear+".csv").then(function(newData){
-            chart.setData = newData;
-            console.log(chart.getData);
-        });
-    }
-
-
-
-
-});
-
-     $("#r_scale").click(function(){
-        chart.setRadialScale = 2.5;
-        chart.draw("#vis");
-     });
-
-
-var toggleDisplay = function (displayName) {
+  const toggleDisplay = function (displayName) {
     if (displayName === 'year') {
       splitBubbles();
     } else {
       chart.groupBubbles();
-  }
-};
+    }
+  };
 
-
-function setupButtons() {
-  d3.select('#toolbar')
-    .selectAll('.button')
-    .on('click', function () {
+  function setupButtons () {
+    d3.select('#toolbar')
+      .selectAll('.button')
+      .on('click', function () {
       // Remove active class from all buttons
-      d3.selectAll('.button').classed('active', false);
-      // Find the button just clicked
-      var button = d3.select(this);
+        d3.selectAll('.button').classed('active', false);
+        // Find the button just clicked
+        const button = d3.select(this);
 
-      // Set it as the active button
-      button.classed('active', true);
+        // Set it as the active button
+        button.classed('active', true);
 
-      // Get the id of the button
-      var buttonId = button.attr('id');
+        // Get the id of the button
+        const buttonId = button.attr('id');
 
-      // Toggle the bubble chart based on
-      // the currently clicked button.
-      toggleDisplay(buttonId);
-    });
-}
-
-
- function nodeYearPos(d){ 
-
-    const yearCenters = {
-    "European": { x: chart.width / 3, y: chart.height / 2 },
-    "American": { x: chart.width /2 , y: chart.height / 2 },
-    "African/Carribean": { x: 2 * chart.width / 3, y: chart.height / 2 },
-    "Other" : {x :chart.width * 0.8 , y: chart.height/2}
+        // Toggle the bubble chart based on
+        // the currently clicked button.
+        toggleDisplay(buttonId);
+      });
   }
+
+  function nodeYearPos (d) {
+    const yearCenters = {
+      European: { x: chart.width / 3, y: chart.height / 2 },
+      American: { x: chart.width / 2, y: chart.height / 2 },
+      'African/Carribean': { x: 2 * chart.width / 3, y: chart.height / 2 },
+      Other: { x: chart.width * 0.8, y: chart.height / 2 }
+    };
     console.log(d.from);
     return yearCenters[d.from].x;
   }
 
-
-    //  add to class
-  function splitBubbles() {
+  //  add to class
+  function splitBubbles () {
     showYearTitles();
 
     // @v4 Reset the 'x' force to draw the bubbles to their year centers
@@ -421,26 +424,13 @@ function setupButtons() {
     chart.simulation.alpha(1).restart();
   }
 
-  /*
-   * Hides Year title displays.
-   */
-  function hideYearTitles() {
-    svg.selectAll('.year').remove();
-  }
-
-  // /*
-  //  * Shows Year title displays.
-  //  */
-  function showYearTitles() {
-    // Another way to do this would be to create
-    // the year texts once and then just hide them.
-
-  const decadeTitle = {
-    "European": chart.width /4,
-    "American": chart.width / 2,
-    "African/Carribean": chart.width * 0.75,
-    "Other" : chart.width * 0.95
-  };
+  function showYearTitles () {
+    const decadeTitle = {
+      European: chart.width / 4,
+      American: chart.width / 2,
+      'African/Carribean': chart.width * 0.75,
+      Other: chart.width * 0.95
+    };
 
     const yearsData = d3.keys(decadeTitle);
     const years = chart.svg.selectAll('.year')
@@ -448,21 +438,14 @@ function setupButtons() {
 
     years.enter().append('text')
       .attr('class', 'year')
-      .attr('x', function (d) { return decadeTitle[d]; })
+      .attr('x', (d) => decadeTitle[d])
       .attr('y', 40)
       .attr('text-anchor', 'middle')
-      .text(function (d) { return d; });
-
-
-
+      .text((d) => d);
   }
 
   setupButtons();
-
 });
-
-
-
 </code></pre>
         </article>
     </section>
@@ -479,7 +462,7 @@ function setupButtons() {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Sun Jan 12 2020 12:45:14 GMT+0000 (Greenwich Mean Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.3</a> on Tue Jan 14 2020 19:02:01 GMT+0000 (Greenwich Mean Time)
 </footer>
 
 <script> prettyPrint(); </script>
