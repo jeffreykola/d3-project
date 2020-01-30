@@ -10,7 +10,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 Ensure that you have internet connection as the code requires some data from non-local repositories
 
-Ensure that you have node.js (v12.14.0) installed
+Ensure that you have the latest version of node installed onto machine
 
 Ensure that you have localhost port 8080 free; close programs like Skype/XAMPP
 
@@ -23,22 +23,35 @@ node --version
 v12.14.10
 ```
 
-If not installed it can be downloaded from :
+If you see an error, the latest version of node can be installed from :
 
 [Node.js installation page](https://nodejs.org/en/download/)
 
 ### Installing
 
 1. Open git bash/cmd in the directory where you have the files installed
+2. In your html file make sure that you have a "div" container with the id "#vis"; this is where the visualisation will be drawn into
+```
+<div id="vis">
+	
+</div>
+```
 2. Import your data onto the webpage either with d3 or other ajax request; you could also choose to pass a raw data object to the BubbleChart constructor
 3. In your javascipt file write the following code
 ```
 let nameOfBubbleChart = new BubbleChart(data);
 ```
-If you are using d3 remember to call the BubbleChart object within the callback function/ promise
+If you are using d3 remember to initalise the BubbleChart object within the callback function/ promise
 ```
 d3.csv("path\to\csv", function(data){
 	let nameOfBubbleChart = new BubbleChart(data);
+});
+```
+Or you could pass raw data into bubbleChart
+```
+let nameOfBubblChart = new BubbleChart({"some_field":1234
+"other_field": 456,
+"foo_field", True	
 });
 ```
 4. run command 'npm start' (Ignore the module not found error)
@@ -57,14 +70,14 @@ C:\Program Files\D3\> npm start
 
 ## Authors
 
-* **Jim Vallandingham** - *Initial work* - [Jim Vallandingham website](https://github.com/vlandham/bubble_chart)
+* **Jim Vallandingham** - *Initial work* - [GitHub repo for initial work](https://github.com/vlandham/bubble_chart)
 
 * **Jeffrey Kola-Abodunde** - *Current work*
 
 ## License
 
 * This project is licensed under Creative Commons Attribution-ShareAlike 
-* [Date of creation:7/01/2019](https://en.wikipedia.org/wiki/List_of_most-streamed_songs_on_Spotify) 
+* [Original Data](https://en.wikipedia.org/wiki/List_of_most-streamed_songs_on_Spotify) 
 * --Also using pages in revision history:
 * [December 30, 2017](https://en.wikipedia.org/w/index.php?title=List_of_most-streamed_songs_on_Spotify&oldid=817803296)
 * [December 30, 2018](https://en.wikipedia.org/w/index.php?title=List_of_most-streamed_songs_on_Spotify&oldid=876064632)

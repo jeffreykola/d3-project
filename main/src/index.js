@@ -15,8 +15,7 @@ class BubbleChart {
       x: this.width / 2,
       y: this.height / 2
     };
-    this.setBubbleColors = ['red', '#ffa500', '#ffcd00', '#87c735', '#3e49bb', '#682cbf', '#7f4fc9', 'pink', 'brown'];
-    this.setRadialScale = 2;
+    this.setBubbleColors = ['#E50000', '#ffa500', '#ffcd00', '#87c735', '#3e49bb', '#682cbf', '#7f4fc9', 'pink', 'brown'];
     this.draw('#vis');
   }
 
@@ -64,7 +63,7 @@ class BubbleChart {
   }
 
   /**
-   *  Set to null by default
+   * Set to null by default
    * These nodes are custom data objects which are based on certain fields in the parsed data
    * @type {Array}
   */
@@ -134,15 +133,17 @@ class BubbleChart {
   Another force applied on the bubbles is called 'charge' which prevents the bubbles from colliding
   */
   createForceLayout () {
+    // Method used to generate value for force based on electric fields
+    // Ensures that no bubbles touch each other
     const charge = (d) => -Math.pow(d.radius, 2.0) * this.getForceStrength;
-
+    // Runs iteratively pushing the bubbles towards the centre of the screen
     const ticked = () => {
       this.bubbleGetter
         .attr('cx', (d) => +d.x)
         .attr('cy', (d) => +d.y);
     };
 
-    //Force simulation 
+    // Creates a force simulation
     const simulation = d3.forceSimulation()
       .velocityDecay(0.2)
       .force('x', d3.forceX().strength(this.getForceStrength).x(this.centerGetter.x))
@@ -161,15 +162,15 @@ class BubbleChart {
    * Creates node object which is explained at the documentation of {@link showDetail}
   */
   setUpChartNodes () {
-    //Maximum amount used to define the range
+    // Maximum amount used to define the range
     const maxAmount = d3.max(this.getData, (d) => +d.Streams * Math.pow(10, 6));
-    //Creates a radial scale
+    // Creates a radial scale
     const radiusScale = d3.scalePow()
       .exponent(2)
       .range([2, 85])
       .domain([0, maxAmount]);
 
-    //For each roe in the csv file, a node object is created  and added to an array of nodes.  
+    // For each roe in the csv file, a node object is created  and added to an array of nodes.
     const myNodes = this.getData.map((d) => ({
       rank: +d.Rank,
       radius: radiusScale(+d.Streams * Math.pow(10, 6)),
@@ -183,6 +184,7 @@ class BubbleChart {
       y: Math.random() * 800
     }));
 
+    // Sorts the nodes to prevent omission of smaller nodes
     myNodes.sort((a, b) => b.value - a.value);
     this.nodeSetter = myNodes;
   }
@@ -206,7 +208,7 @@ class BubbleChart {
 */
   populateChart () {
     const set = new Set();
-    //Function used in local scope to add all the years of the publishing dates to a set which is used as the domain for the ordinal scale
+    // Function used in local scope to add all the years of the publishing dates to a set which is used as the domain for the ordinal scale
     function getYearsCol (data) {
       for (let i = data.length - 1; i >= 0; i--) {
         set.add(data[i].Date.toString());
@@ -267,6 +269,7 @@ class BubbleChart {
   */
   showDetail (d) {
     // change outline to indicate hover state.
+    // Fields displayed here can be changed based on the dataset
     const tooltip = floatingTooltip('gates_tooltip', 240);
     $(this).css({ opacity: 0.8 });
     const content = `<span class="name">Title: </span><span class="value">${
@@ -300,7 +303,7 @@ class BubbleChart {
   * @returns {Array}
   */
   generateRandomColorArray () {
-    //local array used to store random array
+    // local array used to store random array
     const randomColors = [];
     while (randomColors.length <= this.domainGetter.size) {
       if (!randomColors.includes(this.randomColor())) {
@@ -310,7 +313,7 @@ class BubbleChart {
     return randomColors;
   }
 }
-
+// -----END OF CLASS=-//
 // Graph initialisation
 d3.csv('./data/2019.csv').then((data) => {
   const chart = new BubbleChart(data);
@@ -348,7 +351,7 @@ d3.csv('./data/2019.csv').then((data) => {
 
   });
 
-  //Based on how the display is either split the bubbles or group them
+  // Based on how the display is either split the bubbles or group them
   const toggleDisplay = function (displayName) {
     if (displayName === 'year') {
       splitBubbles();
@@ -371,7 +374,6 @@ d3.csv('./data/2019.csv').then((data) => {
 
         // Get the id of the button
         const buttonId = button.attr('id');
-
         // Toggle the bubble chart based on
         // the currently clicked button.
         toggleDisplay(buttonId);
@@ -399,15 +401,14 @@ d3.csv('./data/2019.csv').then((data) => {
     chart.simulation.alpha(1).restart();
   }
 
-  //This is responsible for showing the year titles 
+  // This is responsible for showing the year titles
   function showYearTitles () {
     const decadeTitle = {
-      "European": chart.width / 4,
-      "American": chart.width / 2,
+      European: chart.width / 4,
+      American: chart.width / 2,
       'African/Carribean': chart.width * 0.75,
-      "Other": chart.width * 0.95
+      Other: chart.width * 0.95
     };
-
 
     const yearsData = d3.keys(decadeTitle);
     const years = chart.svg.selectAll('.year')
@@ -421,6 +422,6 @@ d3.csv('./data/2019.csv').then((data) => {
       .text((d) => d);
   }
 
-  //Initialises the button event listeners which are used to added functinoality
+  // Initialises the button event listeners which are used to added functinoality
   setupButtons();
 });
