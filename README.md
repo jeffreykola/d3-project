@@ -87,4 +87,9 @@ C:\Program Files\D3\> npm start
 * Used a color generator mentioned by **Dimitry K** in the comment section of  [Paul Irish website](https://www.paulirish.com/2009/random-hex-color-code-snippets/)
 * Insipration from [Obama Budget Proposal by New York Times](https://archive.nytimes.com/www.nytimes.com/interactive/2012/02/13/us/politics/2013-budget-proposal-graphic.html)
 
+# Images
+Example 1
+![Vis 1](images/example1.png)
+Example 2
+![Vis 2](images/example2.png)
 
